@@ -18,6 +18,7 @@ public interface RoleService {
 
     ApiResponse<RoleRespDto> create(RoleReqDto dto);
 
-    ApiResponse<?> delete(UUID id);
+    ApiResponse<?> edit(UUID id, RoleReqDto dto);
 
+    ApiResponse<?> delete(UUID id);
 }

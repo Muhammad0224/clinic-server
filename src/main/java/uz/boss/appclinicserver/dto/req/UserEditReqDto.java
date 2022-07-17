@@ -9,19 +9,18 @@ import java.util.UUID;
 
 /**
  * Author: Muhammad
- * Date: 30.06.2022
- * Time: 15:44
+ * Date: 19.06.2022
+ * Time: 21:18
  */
 @Getter
 @Setter
-public class ClinicReqDto {
-
+public class UserEditReqDto {
     @NotBlank
-    private String avatar;
-
-    @NotBlank
-    private String name;
+    private String username;
 
     @NotNull
-    private UUID avatarId;
+    private UUID roleId;
+
+    @NotNull
+    private UUID clinicId;
 }

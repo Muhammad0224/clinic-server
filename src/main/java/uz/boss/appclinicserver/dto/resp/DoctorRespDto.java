@@ -4,25 +4,25 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uz.boss.appclinicserver.entity.Attachment;
 
+import java.util.Set;
 import java.util.UUID;
 
 /**
  * Author: Muhammad
- * Date: 19.06.2022
- * Time: 21:16
+ * Date: 04.07.2022
+ * Time: 17:32
  */
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class UserRespDto {
+@NoArgsConstructor
+@AllArgsConstructor
+public class DoctorRespDto {
     private UUID id;
+    private String fullName;
     private String username;
-    private String role;
-    private UUID roleId;
+    private String pnfl;
+    private Set<Attachment> files;
     private boolean active;
-
-    private UUID clinicId;
-    private String clinic;
 }

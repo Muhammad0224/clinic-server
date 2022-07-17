@@ -17,5 +17,6 @@ public interface UserMapper {
     @Mapping(target = "active", source = "enabled")
     @Mapping(target = "clinic", source = "clinic.name")
     @Mapping(target = "role", source = "role.name")
+    @Mapping(target = "roleId", source = "role.id")
     UserRespDto toUserDto(User user);
 }

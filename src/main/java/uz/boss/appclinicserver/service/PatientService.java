@@ -6,6 +6,7 @@ import uz.boss.appclinicserver.dto.resp.PatientRespDto;
 import uz.boss.appclinicserver.entity.User;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Author: Muhammad
@@ -19,4 +20,6 @@ public interface PatientService {
     ApiResponse<List<PatientRespDto>> get(User user);
 
     ApiResponse<PatientRespDto> create(User user, PatientReqDto dto);
+
+    ApiResponse<?> edit(UUID id, PatientReqDto dto);
 }

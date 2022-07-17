@@ -42,7 +42,7 @@ public class AttachmentController {
         attachmentService.download(id, response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/attachment/{id}")
     public ApiResponse<?> delete(@PathVariable UUID id){
         return attachmentService.delete(id);
     }

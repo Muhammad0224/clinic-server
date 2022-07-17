@@ -21,4 +21,5 @@ public class ClinicRespDto {
     private String name;
     private String avatar;
     private boolean active;
+    private UUID avatarId;
 }

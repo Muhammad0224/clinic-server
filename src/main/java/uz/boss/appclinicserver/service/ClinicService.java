@@ -17,5 +17,9 @@ public interface ClinicService {
     ApiResponse<List<ClinicRespDto>> get();
 
     ApiResponse<ClinicRespDto> create(ClinicReqDto dto);
+    ApiResponse<?> activate(UUID id);
+
+    ApiResponse<?> edit(UUID id, ClinicReqDto dto);
+
     ApiResponse<?> delete(UUID id);
 }

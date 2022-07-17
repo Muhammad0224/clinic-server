@@ -46,6 +46,20 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public ApiResponse<?> edit(UUID id, RoleReqDto dto) {
+        Optional<Role> optionalRole = roleRepo.findById(id);
+        if (optionalRole.isEmpty()) {
+            return ApiResponse.notFound("Role");
+        }
+        Role role = optionalRole.get();
+        role.setName(dto.getName());
+        role.setType(dto.getType());
+        role.setPermissions(dto.getPermissions());
+        roleRepo.save(role);
+        return ApiResponse.successResponse(roleMapper.toRoleDto(role));
+    }
+
+    @Override
     public ApiResponse<?> delete(UUID id) {
         Optional<Role> optionalRole = roleRepo.findById(id);
         if (optionalRole.isPresent()) {

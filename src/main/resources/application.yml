@@ -34,4 +34,4 @@ DESTINATION_BASE_DIR: /var/www/clinic.m-muhammad.uz/files
 DESTINATION_IMAGE: image
 DESTINATION_FILE: file
 
-FILE_PATH: http://clinic.m-muhammad.uz/files/image/
+FILE_PATH: http://clinic.m-muhammad.uz/files/

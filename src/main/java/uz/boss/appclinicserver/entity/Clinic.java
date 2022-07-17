@@ -5,6 +5,7 @@ import uz.boss.appclinicserver.entity.abs.Main;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.util.UUID;
 
 /**
  * Author: Muhammad
@@ -23,6 +24,9 @@ public class Clinic extends Main {
 
     @Column
     private String avatar;
+
+    @Column
+    private UUID avatarId;
 
     @Column
     @Builder.Default

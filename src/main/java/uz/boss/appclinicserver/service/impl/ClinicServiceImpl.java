@@ -7,11 +7,14 @@ import uz.boss.appclinicserver.dto.ApiResponse;
 import uz.boss.appclinicserver.dto.req.ClinicReqDto;
 import uz.boss.appclinicserver.dto.resp.ClinicRespDto;
 import uz.boss.appclinicserver.entity.Clinic;
+import uz.boss.appclinicserver.entity.User;
 import uz.boss.appclinicserver.mapper.ClinicMapper;
 import uz.boss.appclinicserver.repository.ClinicRepo;
+import uz.boss.appclinicserver.repository.UserRepo;
 import uz.boss.appclinicserver.service.ClinicService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClinicServiceImpl implements ClinicService {
     private final ClinicRepo clinicRepo;
+    private final UserRepo userRepo;
     private final ClinicMapper clinicMapper;
 
     @Override
@@ -38,12 +42,49 @@ public class ClinicServiceImpl implements ClinicService {
         Clinic clinic = new Clinic();
         clinic.setAvatar(dto.getAvatar());
         clinic.setName(dto.getName());
+        clinic.setAvatarId(dto.getAvatarId());
+        clinicRepo.save(clinic);
+        return ApiResponse.successResponse(clinicMapper.toClinicDto(clinic));
+    }
+
+    @Override
+    public ApiResponse<?> activate(UUID id) {
+        Optional<Clinic> optionalClinic = clinicRepo.findById(id);
+        if (optionalClinic.isEmpty()) {
+            return ApiResponse.notFound("Cliinc");
+        }
+        Clinic clinic = optionalClinic.get();
+        clinic.setActive(true);
+        clinicRepo.save(clinic);
+        return ApiResponse.successResponse("Activate");
+    }
+
+    @Override
+    public ApiResponse<?> edit(UUID id, ClinicReqDto dto) {
+        Optional<Clinic> optionalClinic = clinicRepo.findById(id);
+        if (optionalClinic.isEmpty()) {
+            return ApiResponse.notFound("Clinic");
+        }
+        Clinic clinic = optionalClinic.get();
+        clinic.setAvatar(dto.getAvatar());
+        clinic.setName(dto.getName());
+        clinic.setAvatarId(dto.getAvatarId());
         clinicRepo.save(clinic);
         return ApiResponse.successResponse(clinicMapper.toClinicDto(clinic));
     }
 
     @Override
     public ApiResponse<?> delete(UUID id) {
-        return null;
+        Optional<Clinic> optionalClinic = clinicRepo.findById(id);
+        if (optionalClinic.isEmpty()) {
+            return ApiResponse.notFound("Clinic");
+        }
+        Clinic clinic = optionalClinic.get();
+        clinic.setActive(false);
+        clinicRepo.save(clinic);
+        List<User> users = userRepo.findAllByClinicId(id);
+        users.forEach(user -> user.setEnabled(false));
+        userRepo.saveAll(users);
+        return ApiResponse.successResponse("Deleted");
     }
 }

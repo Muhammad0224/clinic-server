@@ -2,18 +2,21 @@ package uz.boss.appclinicserver.dto.req;
 
 import lombok.Getter;
 import lombok.Setter;
+import uz.boss.appclinicserver.entity.Attachment;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 import java.util.UUID;
 
 /**
  * Author: Muhammad
- * Date: 29.06.2022
- * Time: 18:24
+ * Date: 04.07.2022
+ * Time: 17:36
  */
 @Getter
 @Setter
-public class PatientReqDto {
+public class DoctorReqDto {
     @NotBlank
     private String fullName;
 
@@ -21,12 +24,10 @@ public class PatientReqDto {
     private String pnfl;
 
     @NotBlank
-    private String address;
+    private String username;
 
     @NotBlank
-    private String phoneNumber;
+    private String password;
 
-    private String dateOfBirth;
-
-    private UUID passportId;
+    private Set<UUID> files;
 }

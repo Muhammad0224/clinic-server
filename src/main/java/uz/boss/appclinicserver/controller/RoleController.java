@@ -34,6 +34,11 @@ public class RoleController {
         return roleService.create(dto);
     }
 
+    @PutMapping("/edit/{id}")
+    public ApiResponse<?> edit(@PathVariable UUID id, @RequestBody @Valid RoleReqDto dto){
+        return roleService.edit(id, dto);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ApiResponse<?> delete(@PathVariable UUID id) {
         return roleService.delete(id);

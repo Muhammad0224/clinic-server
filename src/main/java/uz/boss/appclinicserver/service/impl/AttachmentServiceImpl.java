@@ -1,6 +1,7 @@
 package uz.boss.appclinicserver.service.impl;
 
 import com.jcraft.jsch.*;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -70,16 +71,16 @@ public class AttachmentServiceImpl implements AttachmentService {
         resourceFile.setContentType(file.getContentType());
         resourceFile.setDirectory(directory);
 //        resourceFile.setFullPath(path.toFile().getAbsolutePath());
-        resourceFile.setFullPath(FILE_PATH + uniqueName);
+        resourceFile.setFullPath(FILE_PATH + (directory.equals(DirType.IMAGE) ? DESTINATION_IMAGE : DESTINATION_FILE) +"/" + uniqueName);
         Attachment attachment = attachmentRepo.save(resourceFile);
 
-        return ApiResponse.successResponse(new AttachmentRespDto(attachment.getId(), attachment.getFullPath()));
+        return ApiResponse.successResponse(new AttachmentRespDto(attachment.getId(), attachment.getFullPath(), attachment.getContentType()));
     }
 
     @Override
     public ApiResponse<AttachmentRespDto> get(UUID id) {
         return attachmentRepo.findById(id)
-                .map(attachment -> ApiResponse.successResponse(new AttachmentRespDto(attachment.getId(), attachment.getFullPath())))
+                .map(attachment -> ApiResponse.successResponse(new AttachmentRespDto(attachment.getId(), attachment.getFullPath(),attachment.getContentType())))
                 .orElseGet(() -> ApiResponse.notFound("File"));
     }
 
@@ -92,13 +93,13 @@ public class AttachmentServiceImpl implements AttachmentService {
             response.setHeader("Content-Disposition", "attachment; filename=\"" + attachment.getOriginalName() + "\"");
             response.setContentType(attachment.getContentType());
 
-            Map<String, InputStream> file = getFileFromFtpServer(
+            Map<String, String> file = getFileFromFtpServer(
                     List.of(attachment.getName()),
                    attachment.getDirectory().equals(DirType.IMAGE) ? DESTINATION_IMAGE : DESTINATION_FILE
             );
 
 //            FileCopyUtils.copy(new FileInputStream(attachment.getFullPath()), response.getOutputStream());
-            FileCopyUtils.copy(file.get(attachment.getName()), response.getOutputStream());
+            FileCopyUtils.copy(Base64.decodeBase64(file.get(attachment.getName())), response.getOutputStream());
         }
     }
 
@@ -106,13 +107,12 @@ public class AttachmentServiceImpl implements AttachmentService {
     public ApiResponse<?> delete(UUID id) {
         try {
             Attachment attachment = attachmentRepo.findById(id).get();
-//            File oldFile = new File(attachment.getFullPath());
-//            oldFile.delete();
             boolean deleted = deleteFileFromServer(
                     attachment.getName(),
                     attachment.getDirectory().equals(DirType.IMAGE) ? DESTINATION_IMAGE : DESTINATION_FILE);
             if(deleted){
-                attachmentRepo.deleteById(id);
+                attachment.setStatus(false);
+                attachmentRepo.save(attachment);
                 return ApiResponse.successResponse("O'chirildi");
             }else {
                 return ApiResponse.error("Serverda xatolik", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -123,7 +123,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
 
-    private Map<String, InputStream> getFileFromFtpServer(List<String> fileName, String directory) {
+    public Map<String, String> getFileFromFtpServer(List<String> fileName, String directory) {
         String result = "";
         try {
             sch = new JSch();
@@ -146,22 +146,26 @@ public class AttachmentServiceImpl implements AttachmentService {
                 return null;
             }
 
-            Map<String, InputStream> map = new HashMap<>();
+            Map<String, String> map = new HashMap<>();
 
             for (int i = 0; i < fileName.size(); i++) {
                 InputStream inputStream = sftp.get(fileName.get(i));
-                map.put(fileName.get(i), inputStream);
+                byte[] imageBytes = sftp.get(fileName.get(i)).readAllBytes();
+                inputStream.read(imageBytes, 0, imageBytes.length);
+                inputStream.close();
 //                byte[] imageBytes = sftp.get(fileName.get(i)).readAllBytes();
 //                inputStream.read(imageBytes, 0, imageBytes.length);
 //                inputStream.close();
-//                result = Base64.encodeBase64String(imageBytes);
-//                map.put(fileName.get(i), result);
+                result = Base64.encodeBase64String(imageBytes);
+                map.put(fileName.get(i), result);
             }
             sftp.disconnect();
             session.disconnect();
             return map;
         } catch (JSchException | SftpException e) {
             return null;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

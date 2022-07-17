@@ -10,5 +10,8 @@ public enum Permission {
     CAN_GET_DASHBOARD,
     CAN_GET_USERS,
     CAN_GET_CLINIC,
-    CAN_GET_ROLES
+    CAN_GET_ROLES,
+    CAN_ADD_DOCTORS,
+    CAN_GET_DOCTORS,
+    CAN_GET_PATIENTS,
 }

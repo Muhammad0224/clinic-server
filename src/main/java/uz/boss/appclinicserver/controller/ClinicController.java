@@ -34,6 +34,16 @@ public class ClinicController {
         return clinicService.create(dto);
     }
 
+    @PostMapping("/activate/{id}")
+    public ApiResponse<?> activate(@PathVariable UUID id){
+        return clinicService.activate(id);
+    }
+
+    @PutMapping("/edit/{id}")
+    public ApiResponse<?> edit(@PathVariable UUID id, @RequestBody @Valid ClinicReqDto dto){
+        return clinicService.edit(id, dto);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ApiResponse<?> delete(@PathVariable UUID id){
         return clinicService.delete(id);

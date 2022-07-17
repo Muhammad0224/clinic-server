@@ -11,6 +11,7 @@ import uz.boss.appclinicserver.service.PatientService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 import static uz.boss.appclinicserver.utils.Constants.BASE_PATH;
 
@@ -25,12 +26,12 @@ import static uz.boss.appclinicserver.utils.Constants.BASE_PATH;
 public class PatientController {
     private final PatientService patientService;
 
-    @GetMapping("/get")
+    @GetMapping("/get/all")
     public ApiResponse<List<PatientRespDto>> get(){
         return patientService.get();
     }
 
-    @GetMapping("/get-clinic")
+    @GetMapping("/get")
     public ApiResponse<List<PatientRespDto>> get(@CurrentUser User user){
         return patientService.get(user);
     }
@@ -38,5 +39,10 @@ public class PatientController {
     @PostMapping("/create")
     public ApiResponse<PatientRespDto> create(@CurrentUser User user, @RequestBody @Valid PatientReqDto dto){
         return patientService.create(user,dto);
+    }
+
+    @PutMapping("/edit/{id}")
+    public ApiResponse<?> edit(@PathVariable UUID id, @RequestBody @Valid PatientReqDto dto){
+        return patientService.edit(id, dto);
     }
 }

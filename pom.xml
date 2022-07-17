@@ -10,9 +10,10 @@
     </parent>
     <groupId>uz.boss</groupId>
     <artifactId>app-clinic-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>v-1</version>
     <name>app-clinic-server</name>
     <description>app-clinic-server</description>
+    <packaging>jar</packaging>
     <properties>
         <java.version>11</java.version>
     </properties>

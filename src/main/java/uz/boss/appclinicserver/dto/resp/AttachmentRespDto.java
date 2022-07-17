@@ -14,4 +14,5 @@ import java.util.UUID;
 public class AttachmentRespDto {
     private UUID id;
     private String fullPath;
+    private String contentType;
 }

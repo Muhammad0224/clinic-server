@@ -5,6 +5,7 @@ import uz.boss.appclinicserver.entity.abs.Main;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -47,4 +48,7 @@ public class MedicalHistory extends Main {
 
     @Column(name = "clinic_id")
     private UUID clinicId;
+
+    @ManyToMany
+    private Set<Attachment> files;
 }

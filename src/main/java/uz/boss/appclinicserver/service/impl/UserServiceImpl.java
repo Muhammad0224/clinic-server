@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.boss.appclinicserver.dto.ApiResponse;
+import uz.boss.appclinicserver.dto.req.UserEditReqDto;
 import uz.boss.appclinicserver.dto.req.UserReqDto;
 import uz.boss.appclinicserver.dto.resp.UserRespDto;
 import uz.boss.appclinicserver.entity.Clinic;
@@ -22,6 +23,7 @@ import uz.boss.appclinicserver.service.UserService;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -82,5 +84,54 @@ public class UserServiceImpl implements UserService {
                 .build();
         userRepo.save(user);
         return ApiResponse.successResponse(userMapper.toUserDto(user));
+    }
+
+    @Override
+    public ApiResponse<?> activate(UUID id) {
+        Optional<User> optionalUser = userRepo.findById(id);
+        if (optionalUser.isEmpty()) {
+            return ApiResponse.notFound("User");
+        }
+        User user = optionalUser.get();
+        user.setEnabled(true);
+        userRepo.save(user);
+        return ApiResponse.successResponse("Activated");
+    }
+
+    @Override
+    public ApiResponse<?> edit(UUID id, UserEditReqDto dto) {
+        Optional<User> optionalUser = userRepo.findById(id);
+        if (optionalUser.isEmpty()) {
+            return ApiResponse.notFound("User");
+        }
+        if (userRepo.existsByUsernameAndIdNot(dto.getUsername(), id))
+            return ApiResponse.error("Username has already existed", HttpStatus.CONFLICT);
+        Optional<Role> optionalRole = roleRepo.findById(dto.getRoleId());
+        if (optionalRole.isEmpty()) {
+            return ApiResponse.notFound("Role");
+        }
+        Optional<Clinic> optionalClinic = clinicRepo.findById(dto.getClinicId());
+        if (optionalClinic.isEmpty()) {
+            return ApiResponse.notFound("Clinic");
+        }
+
+        User user = optionalUser.get();
+        user.setRole(optionalRole.get());
+        user.setClinicId(dto.getClinicId());
+        user.setUsername(dto.getUsername());
+        userRepo.save(user);
+        return ApiResponse.successResponse(userMapper.toUserDto(user));
+    }
+
+    @Override
+    public ApiResponse<?> delete(UUID id) {
+        Optional<User> optionalUser = userRepo.findById(id);
+        if (optionalUser.isEmpty()) {
+            return ApiResponse.notFound("User");
+        }
+        User user = optionalUser.get();
+        user.setEnabled(false);
+        userRepo.save(user);
+        return ApiResponse.successResponse("Deleted");
     }
 }

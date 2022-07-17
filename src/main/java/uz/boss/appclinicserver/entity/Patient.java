@@ -39,6 +39,13 @@ public class Patient extends Main {
     private LocalDate dateOfBirth;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "passport_id", insertable = false, updatable = false)
+    private Attachment passport;
+
+    @Column(name = "passport_id")
+    private UUID passportId;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(insertable = false, updatable = false,name = "clinic_id")
     private Clinic clinic;
 

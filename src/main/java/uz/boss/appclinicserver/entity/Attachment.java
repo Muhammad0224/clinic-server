@@ -30,4 +30,7 @@ public class Attachment extends Main {
 
     @Enumerated(EnumType.STRING)
     private DirType directory;
+
+    @Builder.Default
+    private boolean status = true;
 }

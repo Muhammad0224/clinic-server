@@ -7,6 +7,8 @@ import uz.boss.appclinicserver.enums.DirType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface AttachmentService {
@@ -17,4 +19,6 @@ public interface AttachmentService {
     void download(UUID id, HttpServletResponse response) throws IOException;
 
     ApiResponse<?> delete(UUID id);
+
+    Map<String, String> getFileFromFtpServer(List<String> fileName, String directory);
 }
