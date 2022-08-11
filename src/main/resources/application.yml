@@ -9,6 +9,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/app_clinic
     username: postgres
+#    username: clinic
     password: root123
   jpa:
     hibernate:
@@ -26,7 +27,7 @@ jwt:
   expire-time-access: 86_400_000
   expire-time-refresh: 31_104_000_000
 
-SSHSERVER_USERNAME: muhammad0224
+SSHSERVER_USERNAME: muhammad
 SSHSERVER_PASSWORD: 8fy64us6
 SSHSERVER_HOST: 176.96.243.46
 SSHSERVER_PORT: 22

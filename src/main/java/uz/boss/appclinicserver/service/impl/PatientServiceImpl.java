@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.boss.appclinicserver.dto.ApiResponse;
 import uz.boss.appclinicserver.dto.req.PatientReqDto;
+import uz.boss.appclinicserver.dto.req.PatientSearchReqDto;
 import uz.boss.appclinicserver.dto.resp.PatientRespDto;
 import uz.boss.appclinicserver.entity.Attachment;
 import uz.boss.appclinicserver.entity.Patient;
@@ -17,6 +18,7 @@ import uz.boss.appclinicserver.service.PatientService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -48,13 +50,41 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public ApiResponse<PatientRespDto> get(UUID id) {
+        Optional<Patient> optionalPatient = patientRepo.findById(id);
+        if (optionalPatient.isEmpty()) {
+            return ApiResponse.notFound("Patient");
+        }
+        Patient patient = optionalPatient.get();
+        return ApiResponse.successResponse(patientMapper.toPatientDto(patient));
+    }
+
+    @Override
+    public ApiResponse<PatientRespDto> cardNumber(String cardNumber) {
+        Optional<Patient> optionalPatient = patientRepo.findByUniqueCode(cardNumber);
+        if (optionalPatient.isEmpty()) {
+            return ApiResponse.notFound("Patient");
+        }
+        Patient patient = optionalPatient.get();
+        return ApiResponse.successResponse(patientMapper.toPatientDto(patient));
+    }
+
+    @Override
+    public ApiResponse<List<PatientRespDto>> filter(PatientSearchReqDto dto) {
+        List<Patient> patients = patientRepo.findAllByUniqueCodeStartsWith(dto.getCardNumber());
+        return ApiResponse.successResponse(patients.stream().map(patientMapper::toPatientDto).collect(Collectors.toList()));
+    }
+
+    @Override
     public ApiResponse<PatientRespDto> create(User user, PatientReqDto dto) {
         if (patientRepo.existsByPnfl(dto.getPnfl())) {
             return ApiResponse.error("Pnfl has already existed", HttpStatus.CONFLICT);
         }
-        Optional<Attachment> optionalAttachment = attachmentRepo.findById(dto.getPassportId());
-        if (optionalAttachment.isEmpty()){
-            return ApiResponse.notFound("Passport");
+        if (Objects.nonNull(dto.getPassportId())) {
+            Optional<Attachment> optionalAttachment = attachmentRepo.findById(dto.getPassportId());
+            if (optionalAttachment.isEmpty()) {
+                return ApiResponse.notFound("Passport");
+            }
         }
 
         String uniqueCode = "";
@@ -87,7 +117,7 @@ public class PatientServiceImpl implements PatientService {
             return ApiResponse.error("Pnfl has already existed", HttpStatus.CONFLICT);
         }
         Optional<Attachment> optionalAttachment = attachmentRepo.findById(dto.getPassportId());
-        if (optionalAttachment.isEmpty()){
+        if (optionalAttachment.isEmpty()) {
             return ApiResponse.notFound("Passport");
         }
 

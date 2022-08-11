@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import uz.boss.appclinicserver.entity.Doctor;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -16,6 +17,8 @@ import java.util.UUID;
 @Repository
 public interface DoctorRepo extends JpaRepository<Doctor, UUID> {
     List<Doctor> findAllByClinicId(UUID clinicId, Sort sort);
+
+    Optional<Doctor> findByUserId(UUID userId);
 
     boolean existsByPnfl(String pnfl);
 

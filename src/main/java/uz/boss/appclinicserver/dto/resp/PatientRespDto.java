@@ -27,4 +27,5 @@ public class PatientRespDto {
     private String uniqueCode;
     private String passportPath;
     private UUID passportId;
+    private String clinic;
 }

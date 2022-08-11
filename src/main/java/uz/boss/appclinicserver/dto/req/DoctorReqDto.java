@@ -29,5 +29,8 @@ public class DoctorReqDto {
     @NotBlank
     private String password;
 
+    @NotBlank
+    private String speciality;
+
     private Set<UUID> files;
 }

@@ -6,7 +6,6 @@ import uz.boss.appclinicserver.dto.req.DoctorReqDto;
 import uz.boss.appclinicserver.dto.resp.DoctorRespDto;
 import uz.boss.appclinicserver.entity.User;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +20,7 @@ public interface DoctorService {
 
     ApiResponse<List<DoctorRespDto>> get(User user);
 
-    ApiResponse<?> getFiles(UUID id, HttpServletResponse response);
+    ApiResponse<?> getFiles(UUID id);
 
     ApiResponse<?> create(User user, DoctorReqDto dto);
 

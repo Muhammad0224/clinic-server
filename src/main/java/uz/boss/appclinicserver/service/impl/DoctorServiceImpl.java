@@ -23,7 +23,6 @@ import uz.boss.appclinicserver.repository.UserRepo;
 import uz.boss.appclinicserver.service.AttachmentService;
 import uz.boss.appclinicserver.service.DoctorService;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -61,7 +60,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @SneakyThrows
     @Override
-    public ApiResponse<?> getFiles(UUID id, HttpServletResponse response) {
+    public ApiResponse<?> getFiles(UUID id) {
         Optional<Doctor> optionalDoctor = doctorRepo.findById(id);
         if (optionalDoctor.isPresent()) {
             List<String> files = new ArrayList<>();
@@ -142,6 +141,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .clinicId(user.getClinicId())
                 .pnfl(dto.getPnfl())
                 .userId(doktor.getId())
+                .speciality(dto.getSpeciality())
                 .files(files)
                 .build();
         doctorRepo.save(doctor);
@@ -187,6 +187,7 @@ public class DoctorServiceImpl implements DoctorService {
         doctor.setFiles(files);
         doctor.setFullName(dto.getFullName());
         doctor.setPnfl(dto.getPnfl());
+        doctor.setSpeciality(dto.getSpeciality());
         doctorRepo.save(doctor);
 
 

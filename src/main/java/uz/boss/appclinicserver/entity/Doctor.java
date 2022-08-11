@@ -26,6 +26,9 @@ public class Doctor extends Main {
     @Column(unique = true)
     private String pnfl;
 
+    @Column
+    private String speciality;
+
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(insertable = false, updatable = false, name = "user_id")
     private User user;

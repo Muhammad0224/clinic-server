@@ -38,8 +38,8 @@ public class DoctorController {
     }
 
     @GetMapping("/get/files/{id}")
-    public ApiResponse<?> getFiles(@PathVariable UUID id, HttpServletResponse response){
-       return doctorService.getFiles(id, response);
+    public ApiResponse<?> getFiles(@PathVariable UUID id){
+       return doctorService.getFiles(id);
     }
 
 

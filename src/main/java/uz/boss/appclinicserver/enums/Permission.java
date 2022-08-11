@@ -14,4 +14,5 @@ public enum Permission {
     CAN_ADD_DOCTORS,
     CAN_GET_DOCTORS,
     CAN_GET_PATIENTS,
+    CAN_GET_HISTORIES
 }

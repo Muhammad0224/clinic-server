@@ -22,6 +22,7 @@ public class DoctorRespDto {
     private UUID id;
     private String fullName;
     private String username;
+    private String speciality;
     private String pnfl;
     private Set<Attachment> files;
     private boolean active;

@@ -15,5 +15,6 @@ import uz.boss.appclinicserver.entity.Patient;
 @Mapper(componentModel = "spring")
 public interface PatientMapper {
     @Mapping(target = "passportPath", source = "passport.fullPath")
+    @Mapping(target = "clinic", source = "clinic.name")
     PatientRespDto toPatientDto(Patient patient);
 }

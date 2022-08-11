@@ -64,6 +64,9 @@ public class AttachmentServiceImpl implements AttachmentService {
                 uniqueName,
                 directory.equals(DirType.IMAGE) ? DESTINATION_IMAGE : DESTINATION_FILE);
 
+        if (pathFile == null){
+            return ApiResponse.error("File saqlanmadi", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         Attachment resourceFile = new Attachment();
         resourceFile.setName(uniqueName);
         resourceFile.setOriginalName(file.getOriginalFilename());
@@ -206,7 +209,7 @@ public class AttachmentServiceImpl implements AttachmentService {
             }
             return result;
         }
-        return "";
+        return null;
     }
 
     private boolean deleteFileFromServer(String fileName, String directory) {
